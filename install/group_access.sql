@@ -21,5 +21,5 @@ CREATE TABLE `module_group_to_users` (
   PRIMARY KEY  (`group_id`,`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `fuel_permissions` (`id`,`name`,`description`,`active`) VALUES
-	('','group_access','Manage Group Access','yes')
+INSERT INTO `fuel_permissions` (`name`,`description`,`active`) VALUES
+	('group_access','Manage Group Access','yes')
