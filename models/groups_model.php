@@ -1,20 +1,24 @@
 <?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(FUEL_PATH.'models/base_module_model.php');
-require_once(MODULES_PATH.'/group_access/config/group_access_constants.php');
+require_once(FUEL_PATH.'models/Base_module_model.php');
 
 class Groups_model extends Base_module_model {
 	
 	public $required = array('name','description');
 	
+	public $has_many = [
+		'permissions' => [FUEL_FOLDER => 'fuel_permissions_model'],
+		'users' => [FUEL_FOLDER => 'fuel_users_model'],
+	];
+
 	function __construct()
 	{
 		parent::__construct('module_groups'); // table name
 	}
 	
-	function form_fields($values = array())
+	function form_fields($values = array(), $related = array())
 	{
-		$fields = parent::form_fields();
+		$fields = parent::form_fields($values, $related);
 		$this->load->module_model(FUEL_FOLDER, 'fuel_permissions_model');
 		$this->load->module_model(FUEL_FOLDER, 'fuel_users_model');
 		$this->load->module_model(GROUP_ACCESS_FOLDER, 'group_to_users_model');
@@ -35,6 +39,9 @@ class Groups_model extends Base_module_model {
     // save one to many permission in group_to_permissions table	
 	function on_after_save($values)
 	{
+
+		$values = parent::on_after_save($values);
+
 		$permissions = (!empty($this->normalized_save_data['permissions'])) ? $this->normalized_save_data['permissions'] : array();
 		$users = (!empty($this->normalized_save_data['users'])) ? $this->normalized_save_data['users'] : array();
 		
@@ -71,4 +78,3 @@ class Groups_model extends Base_module_model {
 class Group_model extends Data_record {
 	
 }
-?>
